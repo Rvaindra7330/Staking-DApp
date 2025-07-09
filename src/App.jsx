@@ -41,9 +41,10 @@ function App() {
       const stake = await stakingContract.stakes(account);
       const rewards = await stakingContract.getPendingRewards(account);
       const paused = await stakingContract.paused();
+      console.log("paused",paused);
       setStakedAmount(ethers.formatEther(stake.amount));
       setPendingRewards(ethers.formatEther(rewards));
-      setIsPaused(paused);
+      //setIsPaused(paused);
     }
   };
 
@@ -89,6 +90,7 @@ function App() {
     try {
       if (!stakingContract) return;
       await stakingContract.pause();
+      setIsPaused(true)
       await fetchData();
     } catch (error) {
       console.error("Pause error:", error);
@@ -100,6 +102,7 @@ function App() {
     try {
       if (!stakingContract) return;
       await stakingContract.unpause();
+      setIsPaused(false)
       await fetchData();
     } catch (error) {
       console.error("Unpause error:", error);
@@ -129,7 +132,7 @@ function App() {
           <p>Staked Amount: {stakedAmount} DMN</p>
           <p>Pending Rewards: {pendingRewards} DMN</p>
           <p>Contract Paused: {isPaused ? "Yes" : "No"}</p>
-
+          {console.log(isPaused)}
           <div className="mt-3">
             <h3>Stake DMN</h3>
             <input
