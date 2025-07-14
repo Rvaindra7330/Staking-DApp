@@ -4,7 +4,7 @@ import StakingABI from "./abis/Staking.json";
 import TokenABI from "./abis/Token.json";
 import "./App.css";
 
-const STAKING_ADDRESS = "0xc0ac67ed075bCa3355574D4b7121063815464FF9"; 
+const STAKING_ADDRESS = "0xc0ac67ed075bCa3355574D4b7121063815464FF9";
 const TOKEN_ADDRESS = "0xd944Ea2D846b8d1219f7be9cF64b78220edc8a2c";
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
       const stake = await stakingContract.stakes(account);
       const rewards = await stakingContract.getPendingRewards(account);
       const paused = await stakingContract.paused();
-      console.log("paused",paused);
+      console.log("paused", paused);
       setStakedAmount(ethers.formatEther(stake.amount));
       setPendingRewards(ethers.formatEther(rewards));
       //setIsPaused(paused);
@@ -120,66 +120,70 @@ function App() {
   }, [stakingContract, account]);
 
   return (
-    <div className="flex justify-between mt-5">
-      <div className="text-center text-2xl font-bold">DMN Staking DApp</div>
-      {!account ? (
-        <button  type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={connectWallet}>
-          Connect Wallet
-        </button>
-      ) : (
-        <div>
-          <p>Connected: {account}</p>
-          <p>Staked Amount: {stakedAmount} DMN</p>
-          <p>Pending Rewards: {pendingRewards} DMN</p>
-          <p>Contract Paused: {isPaused ? "Yes" : "No"}</p>
-          {console.log(isPaused)}
-          <div className="mt-3">
-            <h3>Stake DMN</h3>
-            <input
-              type="number"
-              className="form-control"
-              value={stakeAmount}
-              onChange={(e) => setStakeAmount(e.target.value)}
-              placeholder="Amount to stake"
-            />
-            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"  onClick={stakeTokens}>
-              Stake
-            </button>
-          </div>
-
-          <div className="mt-3">
-            <h3 className="font-bold"> Withdraw DMN</h3>
-            <input
-              type="number"
-              className="form-control"
-              value={withdrawAmount}
-              onChange={(e) => setWithdrawAmount(e.target.value)}
-              placeholder="Amount to withdraw"
-            />
-            <button  type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={withdrawTokens}>
-              Withdraw
-            </button>
-          </div>
-
-          <div className="mt-3">
-            <h3>Claim Rewards</h3>
-            <button  type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={claimRewards}>
-              Claim Rewards
-            </button>
-          </div>
-
-          <div className="mt-3">
-            <h3 className="font-bold">Admin Controls</h3>
-            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"  onClick={pauseContract}>
-              Pause
-            </button>
-            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"  onClick={unpauseContract}>
-              Unpause
-            </button>
-          </div>
+    <div>
+      {!account?
+       <div className="flex flex-col justify-center h-screen items-center bg-slate-200">
+        <button type="button" onClick={connectWallet} className="text-white text-xl font-bold font-serif bg-slate-500 hover:bg-slate-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">connect wallet</button>
+      </div>: 
+      <div className="bg-slate-700 h-screen grid grid-cols-12">
+        <div className="col-span-6 ">
+              <div className="flex flex-col justify-center items-center h-screen text-xl text-white font-bold">
+                <div className="items-start">
+                  <div>
+                     Account: {account}
+                </div>
+                 <div>
+                    Staked Amount: {stakedAmount}
+                </div>
+                   <div>
+                    Pending Rewards: {pendingRewards}
+                </div>
+                 <div>
+                  Contract Paused:{isPaused?" YES":" NO"}
+                </div>
+                </div>
+                 
+              </div>
+      </div>
+      <div className="col-span-6 flex flex-col justify-center items-center ">
+        <div className="text-center text-white text-2xl font-serif font-bold pt-3 mb-4">
+        Stake DMN at 10% APY !!
+      </div>
+      <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col items-start">
+          <div className=" flex justify-between">
+          <input type="text" className="bg-gray-50 border w-xs outline-none border-gray-300 text-gray-900 text-sm rounded-lg p-2.5" placeholder="Enter DMN" required />
+          <button type="button" class="text-white ml-2 bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            stake
+          </button>
         </div>
-      )}
+        <div className="flex justify-between mt-3 mb-5">
+          <input type="text" className="bg-gray-50 border w-xs outline-none border-gray-300 text-gray-900 text-sm rounded-lg p-2.5" placeholder="Enter DMN to withdraw" required />
+          <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+           Withdraw
+          </button>
+        </div>
+        </div>
+        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            Claim rewards
+          </button>
+          <span>
+            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            Pause
+          </button>
+           <button type="button" class="text-white bg-blue-700  hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            Unpause
+          </button>
+          </span>
+          
+      </div>
+      </div>
+      </div>
+
+      }
+      
     </div>
+
   );
 }
 
