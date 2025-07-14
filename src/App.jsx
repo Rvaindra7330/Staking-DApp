@@ -54,21 +54,25 @@ function App() {
     try {
       if (!stakeAmount || !stakingContract || !tokenContract) return;
       const amount = ethers.parseEther(stakeAmount);
-      await tokenContract.approve(STAKING_ADDRESS, amount);
-      await stakingContract.stake(amount);
+      const apprTx= await tokenContract.approve(STAKING_ADDRESS, amount);
+      await apprTx.wait();
+      const stakeTx = await stakingContract.stake(amount);
+      await stakeTx.wait();
       setStakeAmount("");
       await fetchData();
     } catch (error) {
       console.error("Stake error:", error);
       alert("Error staking: " + error.message);
     }
+    console.log("end of stake")
   };
 
   const withdrawTokens = async () => {
     try {
       if (!withdrawAmount || !stakingContract) return;
       const amount = ethers.parseEther(withdrawAmount);
-      await stakingContract.withdraw(amount);
+     const tx= await stakingContract.withdraw(amount);
+     await tx.wait();
       setWithdrawAmount("");
       await fetchData();
     } catch (error) {
@@ -80,7 +84,8 @@ function App() {
   const claimRewards = async () => {
     try {
       if (!stakingContract) return;
-      await stakingContract.claimRewards();
+      const tx = await stakingContract.claimRewards();
+      await tx.wait();
       await fetchData();
     } catch (error) {
       console.error("Claim error:", error);
@@ -91,7 +96,8 @@ function App() {
   const pauseContract = async () => {
     try {
       if (!stakingContract) return;
-      await stakingContract.pause();
+      const tx=await stakingContract.pause();
+      await tx.wait();
       setIsPaused(true)
       await fetchData();
     } catch (error) {
@@ -103,7 +109,8 @@ function App() {
   const unpauseContract = async () => {
     try {
       if (!stakingContract) return;
-      await stakingContract.unpause();
+      const tx = await stakingContract.unpause();
+      await tx.await();
       setIsPaused(false)
       await fetchData();
     } catch (error) {
@@ -154,13 +161,13 @@ function App() {
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col items-start">
           <div className=" flex justify-between">
-          <input type="text" className="bg-gray-50 border w-xs outline-none border-gray-300 text-gray-900 text-sm rounded-lg p-2.5" placeholder="Enter DMN" required />
-          <button type="button" onClick={stakeTokens} className="text-white ml-2 bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          <input type="text" onChange={(e)=>{setStakeAmount(e.target.value)}} className="bg-gray-50 border w-xs outline-none border-gray-300 text-gray-900 text-sm rounded-lg p-2.5" placeholder="Enter DMN" required />
+          <button type="button"  onClick={stakeTokens} className="text-white ml-2 bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             stake
           </button>
         </div>
         <div className="flex justify-between mt-3 mb-5">
-          <input type="text" className="bg-gray-50 border w-xs outline-none border-gray-300 text-gray-900 text-sm rounded-lg p-2.5" placeholder="Enter DMN to withdraw" required />
+          <input type="text" onChange={(e)=>{setWithdrawAmount(e.target.value)}} className="bg-gray-50 border w-xs outline-none border-gray-300 text-gray-900 text-sm rounded-lg p-2.5" placeholder="Enter DMN to withdraw" required />
           <button type="button" onClick={withdrawTokens} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
            Withdraw
           </button>
@@ -170,10 +177,10 @@ function App() {
             Claim rewards
           </button>
           <span>
-            <button type="button" title={isPaused ? "Already paused" : ""} disabled={isPaused} onClick={pauseContract} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            <button type="button" title={isPaused ? "Already paused" : "click to pause the contract"} disabled={isPaused} onClick={pauseContract} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             Pause
           </button>
-           <button type="button" title={!isPaused ? "Already Unpaused" : ""} disabled={!isPaused} onClick={unpauseContract} className="text-white bg-blue-700  hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+           <button type="button" title={!isPaused ? "Already Unpaused" : "click to unpause the contract"} disabled={!isPaused} onClick={unpauseContract} className="text-white bg-blue-700  hover:bg-blue-800 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ml-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             Unpause
           </button>
           </span>
