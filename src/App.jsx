@@ -72,6 +72,7 @@ function App() {
       await stakeTx.wait();
       setIsStakeLoading(false)
       setStakeAmount("");
+      toast.success("staked"`${stakeAmount}`)
       await fetchData();
     } catch (error) {
       console.error("Stake error:", error);
@@ -89,6 +90,7 @@ function App() {
      setIsWithdrawLoading(false)
       setWithdrawAmount("");
       await fetchData();
+      toast.success("withdraw successful");
     } catch (error) {
       console.error("Withdraw error:", error);
       alert("Error withdrawing: " + error.message);
